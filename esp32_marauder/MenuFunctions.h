@@ -113,6 +113,7 @@ struct MenuNode {
   TFT_eSPI_Button* button;
   bool selected;
   std::function<void()> callable;
+  String description;
 };
 
 // Full Menus
@@ -218,7 +219,7 @@ class MenuFunctions
     void drawGraphSmall(uint8_t *values);
     void renderGraphUI(uint8_t scan_mode = 0);
     //void addNodes(Menu* menu, String name, uint16_t color, Menu* child, int place, std::function<void()> callable, bool selected = false, String command = "");
-    void addNodes(Menu* menu, String name, uint8_t color, Menu* child, int place, std::function<void()> callable, bool selected = false, String command = "");
+    void addNodes(Menu* menu, String name, uint8_t color, Menu* child, int place, std::function<void()> callable, bool selected = false, String command = "", String description = "");
     void battery(bool initial = false);
     void battery2(bool initial = false);
     String callSetting(String key);
