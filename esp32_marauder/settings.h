@@ -22,6 +22,21 @@ class Settings {
   private:
     String json_settings_string;
 
+    // Flat cache populated once at begin() and kept in sync by saveSetting().
+    // All loadSetting<T>() reads hit this struct — zero heap, zero JSON parse.
+    struct SettingsCache {
+      bool  ForcePMKID  = false;
+      bool  ForceProbe  = false;
+      bool  SavePCAP    = true;
+      bool  EnableLED   = true;
+      bool  EPDeauth    = false;
+      bool  ChanHop     = false;
+      String ClientSSID = "";
+      String ClientPW   = "";
+    } _cache;
+
+    void _buildCache();  // parse json_settings_string -> _cache
+
   public:
     bool begin();
 
@@ -39,22 +54,9 @@ class Settings {
     String setting_index_to_name(int i);
     int getNumberSettings();
 
-    //template<>
-    //int loadSetting<int>(String key);
-    
-    //template<>
-    //String loadSetting<String>(String key);
-    
-    //template<>
-    //bool loadSetting<bool>(String key);
-    
-    //template<>
-    //uint8_t loadSetting<uint8_t>(String key);
-
     String getSettingsString();
     bool createDefaultSettings(fs::FS &fs, bool spec = false, uint8_t index = 0, String typeStr = "bool", String name = "");
     void printJsonSettings(String json_string);
-    void main(uint32_t currentTime);
 };
 
 #endif

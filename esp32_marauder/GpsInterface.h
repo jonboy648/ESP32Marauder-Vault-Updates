@@ -16,7 +16,7 @@
 //#define GPS_NMEA_SCRNWRAP true //default:true, except on MARAUDER_MINI where false
 //#define GPS_NMEA_MAXQUEUE 30 //default:30 messages max in queue
 
-#ifdef MARAUDER_MINI
+#if defined(MARAUDER_MINI) || defined(MARAUDER_MINI_V3)
   #ifndef GPS_NMEA_SCRNWRAP
     #define GPS_NMEA_SCRNWRAP false
   #endif
@@ -46,6 +46,8 @@ class GpsInterface {
     bool getGpsModuleStatus();
     String getLat();
     String getLon();
+    int32_t getLatInt();
+    int32_t getLonInt();
     float getAlt();
     float getAccuracy();
     String getDatetime();
@@ -93,6 +95,8 @@ class GpsInterface {
     String notparsed_nmea_sentence = "";
     String lat = "";
     String lon = "";
+    int32_t lat_int = 0;
+    int32_t lon_int = 0;
     float altf = 0.0;
     float accuracy = 0.0;
     String datetime = "";
@@ -117,6 +121,9 @@ class GpsInterface {
     void flush_queue_nmea();
     String dt_string_from_gps();
     void setGPSInfo();
+    bool probeBaud(uint32_t baud);
+    void setGpsTo115200From9600();
+    uint32_t initGpsBaudAndForce115200();
 };
 
 #endif

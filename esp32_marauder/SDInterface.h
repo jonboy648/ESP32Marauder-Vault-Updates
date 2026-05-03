@@ -36,13 +36,12 @@ extern Settings settings_obj;
 class SDInterface {
 
   private:
-  #if (defined(MARAUDER_M5STICKC) || defined(HAS_CYD_TOUCH) || defined(MARAUDER_CARDPUTER))
+  #if (defined(MARAUDER_M5STICKC) || defined(HAS_CYD_TOUCH) || defined(MARAUDER_CARDPUTER) || defined(MARAUDER_CARDPUTER_ADV))
     SPIClass *spiExt;
   #elif defined(HAS_C5_SD)
     SPIClass* _spi;
     int _cs;
   #endif
-    bool checkDetectPin();
 
   public:
     #ifdef HAS_C5_SD
@@ -67,7 +66,6 @@ class SDInterface {
     File getFile(String path);
     void runUpdate(String file_name = "");
     void performUpdate(Stream &updateSource, size_t updateSize);
-    void main();
     bool removeFile(String file_path);
 };
 

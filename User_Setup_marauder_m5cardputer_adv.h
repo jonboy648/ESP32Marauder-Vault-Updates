@@ -18,9 +18,11 @@
 // Display type -  only define if RPi display
 //#define RPI_DRIVER
 
+#define CGRAM_OFFSET
+
 // Only define one driver, the other ones must be commented out
 //#define ILI9341_DRIVER // OG Marauder
-#define ST7735_DRIVER    // Marauder Mini  // Define additional parameters below for this display
+//#define ST7735_DRIVER    // Marauder Mini  // Define additional parameters below for this display
 //#define ILI9163_DRIVER     // Define additional parameters below for this display
 //#define S6D02A1_DRIVER
 //#define RPI_ILI9486_DRIVER // 20MHz maximum SPI
@@ -29,7 +31,7 @@
 //#define ILI9486_DRIVER
 //#define ILI9488_DRIVER     // WARNING: Do not connect ILI9488 display SDO to MISO if other devices share the SPI bus (TFT SDO does NOT tristate when CS is high)
 //#define ST7789_DRIVER      // Full configuration option, define additional parameters below for this display
-//#define ST7789_2_DRIVER    // Minimal configuration option, define additional parameters below for this display
+#define ST7789_2_DRIVER    // Minimal configuration option, define additional parameters below for this display
 //#define R61581_DRIVER
 //#define RM68140_DRIVER
 //#define ST7796_DRIVER
@@ -43,8 +45,8 @@
 // For ST7789 and ILI9341 ONLY, define the colour order IF the blue and red are swapped on your display
 // Try ONE option at a time to find the correct colour order for your display
 
-//  #define TFT_RGB_ORDER TFT_RGB  // Colour order Red-Green-Blue
-  #define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red
+  #define TFT_RGB_ORDER TFT_RGB  // Colour order Red-Green-Blue
+//  #define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red
 
 // For M5Stack ESP32 module with integrated ILI9341 display ONLY, remove // in line below
 
@@ -52,10 +54,10 @@
 
 // For ST7789, ST7735 and ILI9163 ONLY, define the pixel width and height in portrait orientation
 // #define TFT_WIDTH  80
- #define TFT_WIDTH  128 // Marauder Mini
+ #define TFT_WIDTH  135 // Marauder Mini
 // #define TFT_WIDTH  240 // ST7789 240 x 240 and 240 x 320
 // #define TFT_HEIGHT 160
- #define TFT_HEIGHT 128 // Marauder Mini
+ #define TFT_HEIGHT 240 // Marauder Mini
 // #define TFT_HEIGHT 240 // ST7789 240 x 240
 // #define TFT_HEIGHT 320 // ST7789 240 x 320
 
@@ -69,7 +71,7 @@
 // #define ST7735_INITB
 // #define ST7735_GREENTAB
 // #define ST7735_GREENTAB2
- #define ST7735_GREENTAB3
+// #define ST7735_GREENTAB3
 // #define ST7735_GREENTAB128    // For 128 x 128 display
 // #define ST7735_GREENTAB160x80 // For 160 x 80 display (BGR, inverted, 26 offset)
 // #define ST7735_REDTAB
@@ -88,7 +90,7 @@
 // driven with a PWM signal or turned OFF/ON then this must be handled by the user
 // sketch. e.g. with digitalWrite(TFT_BL, LOW);
 
- #define TFT_BACKLIGHT_ON LOW  // HIGH or LOW are options
+ #define TFT_BACKLIGHT_ON HIGH  // HIGH or LOW are options
 
 // ##################################################################################
 //
@@ -164,15 +166,25 @@
 // For ESP32 Dev board (only tested with ILI9341 display)
 // The hardware SPI can be mapped to any pins
 
-// Marauder Mini
-#define TFT_CS   17  // Chip select control pin D8
-#define TFT_DC   16  // Data Command control pin
-#define TFT_RST  5  // Reset pin (could connect to NodeMCU RST, see next line)
+// M5 Cardputer ADV
+#define TFT_BL   38
+#define TFT_RST  33  // Reset pin (could connect to NodeMCU RST, see next line)
+#define TFT_DC   34  // Data Command control pin
+#define TFT_MOSI 35
+#define TFT_SCLK 36
+#define TFT_CS   37  // Chip select control pin D8
 #define TOUCH_CS -1
-#define TFT_MISO 19
-#define TFT_MOSI 23
-#define TFT_SCLK 18
-//#define TFT_BL   32
+// #define TFT_MISO -1
+
+// Display SDO/MISO  to NodeMCU pin D6 (or leave disconnected if not reading TFT)
+// Display LED       to NodeMCU pin VIN (or 5V, see below)
+// Display SCK       to NodeMCU pin D5
+// Display SDI/MOSI  to NodeMCU pin D7
+// Display DC (RS/AO)to NodeMCU pin D3
+// Display RESET     to NodeMCU pin D4 (or RST, see below)
+// Display CS        to NodeMCU pin D8 (or GND, see below)
+// Display GND       to NodeMCU pin GND (0V)
+// Display VCC       to NodeMCU 5V or 3.3V
 
 /*
 // ESP32 Marauder 
