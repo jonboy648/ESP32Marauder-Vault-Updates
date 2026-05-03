@@ -81,6 +81,8 @@ void MenuFunctions::buttonSelected(int b, int x) {
                                       color);
     display_obj.tft.setFreeFont(NULL);
   #endif
+
+  this->drawSelectedDescription();
 }
 
 void MenuFunctions::displayMenuButtons() {
@@ -3763,30 +3765,41 @@ void MenuFunctions::displayCurrentMenu(int start_index)
     }
     display_obj.tft.setFreeFont(NULL);
     
-    // Display description of selected item at the bottom of the screen
-    if (current_menu->selected < current_menu->list->size()) {
-      const String& desc = current_menu->list->get(current_menu->selected).description;
-      if (desc.length() > 0) {
-        display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
-        display_obj.tft.setTextSize(1);
-        display_obj.tft.setTextWrap(true);
-        
-        // Draw description at bottom of screen
-        #ifdef HAS_FULL_SCREEN
-          const uint16_t DESC_HEIGHT = 30;
-        #else
-          const uint16_t DESC_HEIGHT = 20;
-        #endif
-        
-        display_obj.tft.fillRect(0, TFT_HEIGHT - DESC_HEIGHT, TFT_WIDTH, DESC_HEIGHT, TFT_BLACK);
-        display_obj.tft.setCursor(2, TFT_HEIGHT - DESC_HEIGHT + 2);
-        display_obj.tft.println(desc);
-        display_obj.tft.setTextWrap(false);
-      }
-    }
+    this->drawSelectedDescription();
   }
 
   this->displayMenuButtons();
+}
+
+// Render description of currently-selected menu item in the bottom strip.
+// Always single-line, truncated with ellipsis if too long. Safe to call from
+// any redraw path - never overlaps button area on V6.1/V6.2 (buttons end y=176,
+// description band y=222-240).
+void MenuFunctions::drawSelectedDescription() {
+  if (!current_menu || !current_menu->list) return;
+  if (current_menu->selected >= current_menu->list->size()) return;
+
+  const uint16_t DESC_HEIGHT = 18;
+  const int16_t  DESC_Y      = TFT_HEIGHT - DESC_HEIGHT;
+  const uint16_t MAX_CHARS   = (TFT_WIDTH - 4) / 6;  // size-1 font is 6px wide
+
+  // Always clear the band so old text never bleeds through on selection change
+  display_obj.tft.fillRect(0, DESC_Y, TFT_WIDTH, DESC_HEIGHT, TFT_BLACK);
+
+  const String& desc = current_menu->list->get(current_menu->selected).description;
+  if (desc.length() == 0) return;
+
+  String line = desc;
+  if (line.length() > MAX_CHARS) {
+    line = line.substring(0, MAX_CHARS - 1) + ">";
+  }
+
+  display_obj.tft.setFreeFont(NULL);
+  display_obj.tft.setTextWrap(false);
+  display_obj.tft.setTextSize(1);
+  display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  display_obj.tft.setCursor(2, DESC_Y + 5);
+  display_obj.tft.print(line);
 }
 
 // ============================================================
