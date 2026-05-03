@@ -45,8 +45,8 @@ jobs:
       - name: Install Arduino CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "/home/runner/work/ESP32Marauder/ESP32Marauder/bin" >> $GITHUB_PATH
-          export PATH=$PATH:/home/runner/work/ESP32Marauder/ESP32Marauder/bin
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
+          export PATH=$PATH:${{ github.workspace }}/bin
           arduino-cli version
 
       #- name: Install Arduino-ESP32 Core v${{ matrix.board.idf_ver }}
@@ -226,7 +226,7 @@ jobs:
           pwd
           if [[ ${{ matrix.board.tft }} == true ]]; then
             find /home/runner/ -name "*TFT_eSPI*"
-            sed -i 's/^\/\/#include <${{ matrix.board.tft_file }}>/#include <${{ matrix.board.tft_file }}>/' /home/runner/work/ESP32Marauder/ESP32Marauder/CustomTFT_eSPI/User_Setup_Select.h
+            sed -i 's/^\/\/#include <${{ matrix.board.tft_file }}>/#include <${{ matrix.board.tft_file }}>/' ${{ github.workspace }}/CustomTFT_eSPI/User_Setup_Select.h
           fi
 
       - name: Build Marauder for ${{ matrix.board.name }}
