@@ -5,6 +5,8 @@
 #include <lvgl.h>
 #include "Display.h"
 #include "LvglScreens.h"
+#include "LvglStatusBar.h"
+#include "LvglAlertOverlay.h"
 
 extern Display display_obj;
 
@@ -64,6 +66,8 @@ void LvglDisplay::init() {
 
     s_ready = true;
 
+    LvglStatusBar::init();
+    LvglAlertOverlay::init();
     LvglScreens::show_home();
 }
 
