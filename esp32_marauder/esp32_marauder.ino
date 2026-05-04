@@ -48,6 +48,10 @@ https://www.online-utility.org/image/convert/to/XBM
   #include "MenuFunctions.h"
 #endif
 
+#ifdef HAS_LVGL_UI
+  #include "LvglDisplay.h"
+#endif
+
 #ifdef HAS_BUTTONS
   #include "Switches.h"
   
@@ -411,8 +415,12 @@ void setup()
   menu_function_obj.changeMenu(menu_function_obj.current_menu);*/
 
   wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
-  
+
   cli_obj.RunSetup();
+
+  #ifdef HAS_LVGL_UI
+    LvglDisplay::init();
+  #endif
 }
 
 
@@ -420,6 +428,10 @@ void loop()
 {
   currentTime = millis();
   bool mini = false;
+
+  #ifdef HAS_LVGL_UI
+    LvglDisplay::tick();
+  #endif
 
   #ifdef SCREEN_BUFFER
     #ifndef HAS_ILI9341
