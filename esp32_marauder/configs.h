@@ -268,8 +268,11 @@
     #define HAS_IDF_3
     #define HAS_C5_SD
     // LVGL UI rebuild + Watchtower (see docs/superpowers/specs/2026-05-03-marauder-lvgl-watchtower-design.md)
-    // Disabled by default until Phase 1 lands; enabling these without the new modules will break the build.
-    #define HAS_LVGL_UI
+    // Phase 1 disabled on hardware: status-bar widgets compile and link but
+    // the legacy TFT_eSPI menu system writes to the same display, causing
+    // overlap. Re-enable once Phase 1 owns the display (full LVGL takeover
+    // OR fenced region with TFT_eSPI viewport set to y=14..320).
+    //#define HAS_LVGL_UI
     //#define HAS_WATCHTOWER
     //#define HAS_CSI
   #endif
