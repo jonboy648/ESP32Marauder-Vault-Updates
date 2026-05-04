@@ -121,7 +121,11 @@ jobs:
       - name: Install lv_arduino (use vendored LVGL v8.3.11)
         run: |
           cp -r esp32_marauder/libraries/lv_arduino Customlv_arduino
-          cp esp32_marauder/libraries/lv_conf.h Customlv_arduino/lv_conf.h
+          # Place lv_conf.h inside src/ so it's reachable via __has_include("lv_conf.h"),
+          # which causes lv_conf_internal.h to auto-define LV_CONF_INCLUDE_SIMPLE.
+          # This avoids passing -DLV_CONF_INCLUDE_SIMPLE through extra-arduino-cli-args,
+          # which doesn't survive ArminJo/arduino-test-compile's argv splitting.
+          cp esp32_marauder/libraries/lv_conf.h Customlv_arduino/src/lv_conf.h
 
       - name: Install JPEGDecoder
         uses: actions/checkout@v2
@@ -232,7 +236,7 @@ jobs:
         with:
           sketch-names: esp32_marauder.ino
           arduino-board-fqbn: ${{ matrix.board.fbqn }}
-          extra-arduino-cli-args: "--warnings none --build-property \"compiler.cpp.extra_flags=-D${{ matrix.board.flag }} -DLV_CONF_INCLUDE_SIMPLE\""
+          extra-arduino-cli-args: "--warnings none --build-property compiler.cpp.extra_flags=-D${{ matrix.board.flag }}"
           arduino-platform: esp32:esp32@${{ matrix.board.idf_ver }}
           platform-url: https://github.com/espressif/arduino-esp32/releases/download/${{ matrix.board.idf_ver }}/package_esp32_dev_index.json
 
