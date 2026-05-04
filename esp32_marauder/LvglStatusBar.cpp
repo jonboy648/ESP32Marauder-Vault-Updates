@@ -3,6 +3,7 @@
 #ifdef HAS_LVGL_UI
 
 #include <lvgl.h>
+#include <stdio.h>
 
 // All status-bar widgets live on lv_disp_top_layer so they sit above
 // every screen the user navigates to. They never get cleared by
