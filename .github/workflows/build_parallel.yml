@@ -118,12 +118,10 @@ jobs:
           ref: v1.4
           path: CustomXPT2046_Touchscreen
 
-      - name: Install lv_arduino
-        uses: actions/checkout@v2
-        with:
-          repository: lvgl/lv_arduino
-          ref: 3.0.0
-          path: Customlv_arduino
+      - name: Install lv_arduino (use vendored LVGL v8.3.11)
+        run: |
+          cp -r esp32_marauder/libraries/lv_arduino Customlv_arduino
+          cp esp32_marauder/libraries/lv_conf.h ./lv_conf.h
 
       - name: Install JPEGDecoder
         uses: actions/checkout@v2
