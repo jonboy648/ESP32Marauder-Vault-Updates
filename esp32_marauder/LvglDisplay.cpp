@@ -4,6 +4,7 @@
 
 #include <lvgl.h>
 #include "Display.h"
+#include "LvglScreens.h"
 
 extern Display display_obj;
 
@@ -62,6 +63,8 @@ void LvglDisplay::init() {
     lv_indev_drv_register(&s_indev_drv);
 
     s_ready = true;
+
+    LvglScreens::show_home();
 }
 
 void LvglDisplay::tick() {
