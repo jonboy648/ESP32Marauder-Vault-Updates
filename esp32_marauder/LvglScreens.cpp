@@ -60,9 +60,17 @@ void* LvglScreens::make_home() {
 }
 
 // Click event for menu items: invokes the MenuNode's stored callable.
+// user_data is the Menu*; we recover which item was clicked by looking up
+// the button's index within its parent list. This avoids storing pointers
+// to LinkedList::get() return values (which are by-value temporaries).
 static void menu_item_event_cb(lv_event_t* e) {
-    MenuNode* node = (MenuNode*)lv_event_get_user_data(e);
-    if (node && node->callable) node->callable();
+    Menu* menu_def = (Menu*)lv_event_get_user_data(e);
+    if (!menu_def || !menu_def->list) return;
+    lv_obj_t* btn = lv_event_get_target(e);
+    uint32_t idx = lv_obj_get_index(btn);
+    if ((int)idx >= menu_def->list->size()) return;
+    MenuNode node = menu_def->list->get(idx);
+    if (node.callable) node.callable();
 }
 
 void* LvglScreens::make_menu(Menu* menu_def) {
@@ -87,10 +95,9 @@ void* LvglScreens::make_menu(Menu* menu_def) {
     for (int i = 0; i < n; i++) {
         MenuNode node = menu_def->list->get(i);
         lv_obj_t* btn = lv_list_add_btn(list, NULL, node.name.c_str());
-        // Pass a pointer to the stored MenuNode so the callback can fire its callable.
-        // We use the LinkedList's internal storage; lifetime matches the menu.
-        lv_obj_add_event_cb(btn, menu_item_event_cb, LV_EVENT_CLICKED,
-                            &menu_def->list->get(i));
+        // Pass the stable Menu* as user_data; the callback recovers the
+        // clicked item via lv_obj_get_index() on the button.
+        lv_obj_add_event_cb(btn, menu_item_event_cb, LV_EVENT_CLICKED, menu_def);
     }
 
     return scr;

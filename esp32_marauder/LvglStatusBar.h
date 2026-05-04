@@ -3,6 +3,7 @@
 #define LvglStatusBar_h
 
 #include "configs.h"
+#include <stdint.h>
 
 #ifdef HAS_LVGL_UI
 
