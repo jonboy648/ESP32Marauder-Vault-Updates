@@ -59,14 +59,52 @@ void* LvglScreens::make_home() {
     return scr;
 }
 
-void* LvglScreens::make_menu(Menu* menu_def)    { (void)menu_def; return nullptr; }
+// Click event for menu items: invokes the MenuNode's stored callable.
+static void menu_item_event_cb(lv_event_t* e) {
+    MenuNode* node = (MenuNode*)lv_event_get_user_data(e);
+    if (node && node->callable) node->callable();
+}
+
+void* LvglScreens::make_menu(Menu* menu_def) {
+    if (!menu_def || !menu_def->list) return nullptr;
+
+    lv_obj_t* scr = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
+
+    // Title bar: 14px reserved for status bar, then a label with menu name.
+    static const int kTitleY = 14;
+    lv_obj_t* title = lv_label_create(scr);
+    lv_label_set_text(title, menu_def->name.c_str());
+    lv_obj_set_style_text_color(title, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_align(title, LV_ALIGN_TOP_LEFT, 4, kTitleY);
+
+    // Scrollable list of menu items, fills the screen below the title.
+    lv_obj_t* list = lv_list_create(scr);
+    lv_obj_set_size(list, TFT_WIDTH, TFT_HEIGHT - kTitleY - 18);
+    lv_obj_align(list, LV_ALIGN_TOP_LEFT, 0, kTitleY + 18);
+
+    int n = menu_def->list->size();
+    for (int i = 0; i < n; i++) {
+        MenuNode node = menu_def->list->get(i);
+        lv_obj_t* btn = lv_list_add_btn(list, NULL, node.name.c_str());
+        // Pass a pointer to the stored MenuNode so the callback can fire its callable.
+        // We use the LinkedList's internal storage; lifetime matches the menu.
+        lv_obj_add_event_cb(btn, menu_item_event_cb, LV_EVENT_CLICKED,
+                            &menu_def->list->get(i));
+    }
+
+    return scr;
+}
 void* LvglScreens::make_synthesis()             { return nullptr; }
 
 void LvglScreens::show_home() {
     lv_obj_t* scr = (lv_obj_t*)make_home();
     if (scr) lv_scr_load(scr);
 }
-void LvglScreens::show_menu(Menu* menu_def)     { (void)menu_def; }
+void LvglScreens::show_menu(Menu* menu_def) {
+    lv_obj_t* scr = (lv_obj_t*)make_menu(menu_def);
+    if (scr) lv_scr_load(scr);
+}
 void LvglScreens::show_synthesis()              {}
 
 #endif /* HAS_LVGL_UI */
