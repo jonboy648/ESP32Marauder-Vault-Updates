@@ -269,7 +269,7 @@
     #define HAS_C5_SD
     // LVGL UI rebuild + Watchtower (see docs/superpowers/specs/2026-05-03-marauder-lvgl-watchtower-design.md)
     // Disabled by default until Phase 1 lands; enabling these without the new modules will break the build.
-    //#define HAS_LVGL_UI
+    #define HAS_LVGL_UI
     //#define HAS_WATCHTOWER
     //#define HAS_CSI
   #endif
