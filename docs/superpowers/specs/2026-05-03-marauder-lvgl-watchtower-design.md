@@ -130,9 +130,9 @@ The bottom strip shows the highest-tier unacknowledged event. CRITICAL events st
 
 ### 4.5 Navigation rules
 
-- **Hardware buttons:** Marauder's 4-button layout (UP/DOWN/SELECT/BACK) is preserved. UP/DOWN traverse rows in LIST and zoom in MAP. SELECT enters DETAIL. BACK returns to home grid (or to home from any depth via long-press).
-- **Tab switching:** SELECT-long while on Synthesis cycles tabs (MAP → LIST → DETAIL → SETTINGS → MAP).
-- **Alert dismissal:** SELECT-tap on the bottom strip acknowledges the displayed event. CRITICAL modal is dismissed by SELECT-tap.
+- **Primary input on V6.1:** the resistive ILI9341 touchscreen. Tapping a tile, list row, or tab is the standard interaction. Drag/swipe on the MAP tab pans; pinch is unavailable on resistive single-touch.
+- **The single physical button (C_BTN):** acts as BACK / dismiss. Short tap returns one level (Synthesis → home, menu → parent menu); long-press jumps to home from any depth; on the alert strip it acknowledges the current event; on a CRITICAL modal it dismisses.
+- **Boards with full button arrays** (V4, Mini, V8, Cardputer): may register a secondary `LV_INDEV_TYPE_KEYPAD` indev mapping UP/DOWN/SELECT/BACK to LVGL keys. Out of scope for V6.1's Phase 1; revisit in Phase 6 when cross-board polish lands.
 - **Entering existing menus:** unchanged from current Marauder behavior. The LVGL renderer wraps `MenuFunctions` output but preserves all 191 existing menu paths.
 
 ### 4.6 Triage mode
